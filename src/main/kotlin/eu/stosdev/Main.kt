@@ -1,19 +1,26 @@
 package eu.stosdev
 
 import javafx.application.Application
-import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Stage
+
+class UberControllerImpl() : UberController() {
+
+}
 
 class SampleApp : Application() {
 
     override fun start(primaryStage: Stage) {
-        val parent: Parent = KotlinFXMLLoader.load(javaClass<SampleApp>().getResource("fxml_example.fxml"))
-        val scene = Scene(parent, 800.0, 600.0);
+        val mainController = UberControllerImpl()
+        primaryStage.setScene(Scene(mainController.root, 600.0, 400.0))
+        primaryStage.show()
 
-        primaryStage.setTitle("Kotlin FXML");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        /*val resource = javaClass<SampleApp>().getResource("test.fxml")
+        val parser = FXMLParser(resource)
+        parser.load<VBox>()
+        println(parser.getClassCode(javaClass<SampleApp>().getPackage().toString(), "UberController"))
+        System.exit(0)
+        VBox().getChildren()*/
     }
 
 }
