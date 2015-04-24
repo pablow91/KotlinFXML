@@ -1,6 +1,7 @@
 package eu.stosdev
 
 import javafx.fxml.FXMLLoader
+import javafx.fxml.JavaFXBuilderFactory
 import javafx.scene.Node
 import javafx.util.BuilderFactory
 import java.net.URL
@@ -8,7 +9,7 @@ import java.util.ArrayList
 import java.util.ResourceBundle
 
 object KotlinFXMLLoader {
-    fun load<T>(location: URL, resources: ResourceBundle? = null, builderFactory: BuilderFactory? = null): T {
+    fun load<T>(location: URL, resources: ResourceBundle? = null, builderFactory: BuilderFactory? = JavaFXBuilderFactory()): T {
         val fxmlLoader = FXMLLoader()
         fxmlLoader.setLocation(location)
         fxmlLoader.setResources(resources)
