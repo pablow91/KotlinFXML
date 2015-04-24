@@ -22,6 +22,42 @@ object KotlinFXMLLoader {
                 counter++
             }
 
+            override fun beginIncludeElement() {
+                counter++
+            }
+
+            override fun beginRootElement() {
+                counter++
+            }
+
+            override fun beginDefineElement() {
+                counter++
+            }
+
+            override fun beginCopyElement() {
+                counter++
+            }
+
+            override fun beginPropertyElement(name: String?, sourceType: Class<*>?) {
+                counter++
+            }
+
+            override fun beginScriptElement() {
+                counter++
+            }
+
+            override fun beginReferenceElement() {
+                counter++
+            }
+
+            override fun beginUnknownStaticPropertyElement(name: String?) {
+                counter++
+            }
+
+            override fun beginUnknownTypeElement(name: String?) {
+                counter++
+            }
+
             override fun endElement(value: Any?) {
                 //If created element has 'id' set try to inject to bindFXML or bindOptionalFXML field delegate
                 if (value is Node && value.getId() != null) {
