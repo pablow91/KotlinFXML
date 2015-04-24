@@ -2,7 +2,6 @@ package eu.stosdev
 
 import javafx.fxml.FXMLLoader
 import javafx.fxml.JavaFXBuilderFactory
-import javafx.scene.Node
 import javafx.util.BuilderFactory
 import java.net.URL
 import java.util.ArrayList
@@ -59,28 +58,32 @@ object KotlinFXMLLoader {
             }
 
             override fun endElement(value: Any?) {
-                //If created element has 'id' set try to inject to bindFXML or bindOptionalFXML field delegate
-                if (value is Node && value.getId() != null) {
+                //If created element has 'getId' method try to inject to bindFXML or bindOptionalFXML field delegate
+                try {
+                    if (value == null) throw NoSuchMethodException()
+                    val valueId: String? = value.javaClass.getMethod("getId").invoke(value) as String?;
+                    if (valueId == null) throw NoSuchMethodException()
                     val controller: Any = fxmlLoader.getController()
                     try {
-                        val field = controller.javaClass.getDeclaredField("${value.getId()}\$delegate")
-                        if (field.getType() == javaClass<bindFXML<Node>>() || field.getType() == javaClass<bindOptionalFXML<Node>>()) {
+                        val field = controller.javaClass.getDeclaredField("$valueId\$delegate")
+                        if (field.getType() == javaClass<bindFXML<Any>>() || field.getType() == javaClass<bindOptionalFXML<Any>>()) {
                             field.setAccessible(true)
                             val delegate: Any = field.get(controller)
                             val valueField = delegate.javaClass.getDeclaredField("value")
                             valueField.setAccessible(true)
-                            val fieldType = controller.javaClass.getMethod("get${value.getId().capitalize()}").getReturnType()
+                            val fieldType = controller.javaClass.getMethod("get${valueId.capitalize()}").getReturnType()
                             //Check if field type and created object have compatible types
                             if (!fieldType.isInstance(value)) {
-                                throw IllegalArgumentException("Node '${value.getId()}' type [${value.javaClass.getName()}] is is not subtype of [${fieldType.getName()}] ")
+                                throw IllegalArgumentException("Class '$valueId' type [${value.javaClass.getName()}] is is not subtype of [${fieldType.getName()}] ")
                             }
                             valueField.set(delegate, value)
                             valueField.setAccessible(false)
                             field.setAccessible(false)
                         }
                     } catch (e: NoSuchFieldException) {
-                        println("No field for element ${value.getId()}")
+                        println("No field for element $valueId")
                     }
+                } catch (e: NoSuchMethodException) {
                 }
                 counter--;
 
@@ -89,7 +92,7 @@ object KotlinFXMLLoader {
                 if (counter == 0) {
                     val controller: Any = fxmlLoader.getController()
                     val invalidFields = controller.javaClass.getDeclaredFields().filter {
-                        if (javaClass<bindFXML<Node>>() != it.getType()) {
+                        if (javaClass<bindFXML<Any>>() != it.getType()) {
                             return@filter false
                         }
                         try {

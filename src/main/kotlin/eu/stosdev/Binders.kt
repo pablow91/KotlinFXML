@@ -1,9 +1,8 @@
 package eu.stosdev
 
-import javafx.scene.Node
 import kotlin.properties.ReadOnlyProperty
 
-public class bindFXML<T : Node> : ReadOnlyProperty<Any?, T> {
+public class bindFXML<T : Any> : ReadOnlyProperty<Any?, T> {
     private var value: T? = null
 
     public override fun get(thisRef: Any?, desc: PropertyMetadata): T {
@@ -15,7 +14,7 @@ public class bindFXML<T : Node> : ReadOnlyProperty<Any?, T> {
     }
 }
 
-public class bindOptionalFXML<T : Node> : ReadOnlyProperty<Any?, T?> {
+public class bindOptionalFXML<T : Any> : ReadOnlyProperty<Any?, T?> {
     private var value: T? = null
 
     public override fun get(thisRef: Any?, desc: PropertyMetadata): T? {
