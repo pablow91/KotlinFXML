@@ -3,17 +3,23 @@ package eu.stosdev
 import javafx.fxml.FXMLLoader
 import javafx.fxml.JavaFXBuilderFactory
 import javafx.util.BuilderFactory
+import javafx.util.Callback
+import java.io.InputStream
 import java.net.URL
+import java.nio.charset.Charset
 import java.util.ArrayList
+import java.util.LinkedList
 import java.util.ResourceBundle
 
-object KotlinFXMLLoader {
-    fun load<T>(location: URL, resources: ResourceBundle? = null, builderFactory: BuilderFactory? = JavaFXBuilderFactory()): T {
-        val fxmlLoader = FXMLLoader()
-        fxmlLoader.setLocation(location)
-        fxmlLoader.setResources(resources)
-        fxmlLoader.setBuilderFactory(builderFactory)
-        fxmlLoader.impl_setLoadListener(object : AbstractLoadListener() {
+public class KotlinFXMLLoader public(location: URL? = null, resources: ResourceBundle? = null,
+                                     builderFactory: BuilderFactory = JavaFXBuilderFactory(),
+                                     controllerFactory: Callback<Class<*>, Any>? = null,
+                                     charset: Charset = Charset.forName("UTF-8"),
+                                     loaders: LinkedList<FXMLLoader> = LinkedList<FXMLLoader>())
+: FXMLLoader(location, resources, builderFactory, controllerFactory, charset, loaders) {
+
+    override public fun load<T>(): T {
+        impl_setLoadListener(object : AbstractLoadListener() {
 
             var counter = 0
 
@@ -63,7 +69,7 @@ object KotlinFXMLLoader {
                     if (value == null) throw NoSuchMethodException()
                     val valueId: String? = value.javaClass.getMethod("getId").invoke(value) as String?;
                     if (valueId == null) throw NoSuchMethodException()
-                    val controller: Any = fxmlLoader.getController()
+                    val controller: Any = getController()
                     try {
                         val field = controller.javaClass.getDeclaredField("$valueId\$delegate")
                         if (field.getType() == javaClass<bindFXML<Any>>() || field.getType() == javaClass<bindOptionalFXML<Any>>()) {
@@ -90,7 +96,7 @@ object KotlinFXMLLoader {
                 //When counter is 0 the root tag has been closed.
                 //Now is good time to validate if all fields with bindFXML are set
                 if (counter == 0) {
-                    val controller: Any = fxmlLoader.getController()
+                    val controller: Any = getController()
                     val invalidFields = controller.javaClass.getDeclaredFields().filter {
                         if (javaClass<bindFXML<Any>>() != it.getType()) {
                             return@filter false
@@ -113,6 +119,10 @@ object KotlinFXMLLoader {
                 }
             }
         })
-        return fxmlLoader.load()
+        return super.load()
+    }
+
+    override public fun <T> load(inputStream: InputStream?): T? {
+        throw UnsupportedOperationException("This operation is not implemented yet. Use load() method instead.")
     }
 }
