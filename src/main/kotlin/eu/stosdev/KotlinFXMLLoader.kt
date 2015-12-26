@@ -11,14 +11,14 @@ import java.util.ArrayList
 import java.util.LinkedList
 import java.util.ResourceBundle
 
-public class KotlinFXMLLoader public(location: URL? = null, resources: ResourceBundle? = null,
+public class KotlinFXMLLoader public constructor(location: URL? = null, resources: ResourceBundle? = null,
                                      builderFactory: BuilderFactory = JavaFXBuilderFactory(),
                                      controllerFactory: Callback<Class<*>, Any>? = null,
                                      charset: Charset = Charset.forName("UTF-8"),
                                      loaders: LinkedList<FXMLLoader> = LinkedList<FXMLLoader>())
 : FXMLLoader(location, resources, builderFactory, controllerFactory, charset, loaders) {
 
-    override public fun load<T>(): T {
+    override public fun <T> load(): T {
         impl_setLoadListener(object : AbstractLoadListener() {
 
             var counter = 0
@@ -72,7 +72,7 @@ public class KotlinFXMLLoader public(location: URL? = null, resources: ResourceB
                     val controller: Any = getController()
                     try {
                         val field = controller.javaClass.getDeclaredField("$valueId\$delegate")
-                        if (field.getType() == javaClass<bindFXML<Any>>() || field.getType() == javaClass<bindOptionalFXML<Any>>()) {
+                        if (field.getType() == bindFXML::class.java || field.getType() == bindOptionalFXML::class.java) {
                             field.setAccessible(true)
                             val delegate: Any = field.get(controller)
                             val valueField = delegate.javaClass.getDeclaredField("value")
@@ -98,7 +98,7 @@ public class KotlinFXMLLoader public(location: URL? = null, resources: ResourceB
                 if (counter == 0) {
                     val controller: Any = getController()
                     val invalidFields = controller.javaClass.getDeclaredFields().filter {
-                        if (javaClass<bindFXML<Any>>() != it.getType()) {
+                        if (bindFXML::class.java != it.getType()) {
                             return@filter false
                         }
                         try {
@@ -112,7 +112,7 @@ public class KotlinFXMLLoader public(location: URL? = null, resources: ResourceB
                             it.setAccessible(false)
                         }
                         return@filter false
-                    } map { it.getName().substringBefore("$") } toCollection ArrayList<String>()
+                    }.map { it.getName().substringBefore("$") }.toCollection(ArrayList<String>())
                     if (invalidFields.isNotEmpty()) {
                         throw IllegalStateException("Those field ${invalidFields} has not been injected. It they are optional use bindOptionalFXML()")
                     }
