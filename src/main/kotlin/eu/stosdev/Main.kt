@@ -8,7 +8,7 @@ import javafx.stage.Stage
 class SampleApp : Application() {
 
     override fun start(primaryStage: Stage) {
-        val parent: Parent = KotlinFXMLLoader(javaClass<SampleApp>().getResource("fxml_example.fxml")).load()
+        val parent: Parent = KotlinFXMLLoader(SampleApp::class.java.getResource("fxml_example.fxml")).load()
         val scene = Scene(parent, 800.0, 600.0);
 
         primaryStage.setTitle("Kotlin FXML");
@@ -19,5 +19,5 @@ class SampleApp : Application() {
 }
 
 fun main(args: Array<String>) {
-    Application.launch(javaClass<SampleApp>())
+    Application.launch(SampleApp::class.java)
 }

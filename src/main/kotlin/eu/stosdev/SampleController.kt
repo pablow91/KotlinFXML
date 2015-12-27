@@ -26,7 +26,7 @@ public class SampleController {
     }
 
     //Method invoked by pressing top button
-    FXML fun test() {
+    @FXML fun test() {
         println("First button clicked")
     }
 
