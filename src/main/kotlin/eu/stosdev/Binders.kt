@@ -6,7 +6,7 @@ import kotlin.reflect.KProperty
 public class bindFXML<T : Any> : ReadOnlyProperty<Any?, T> {
     private var value: T? = null
 
-    public override fun getValue(thisRef: Any?, desc: KProperty<out Any?>): T {
+    public override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         val v = value
         if (v == null) {
             throw IllegalStateException("Node was not properly injected")
@@ -18,7 +18,7 @@ public class bindFXML<T : Any> : ReadOnlyProperty<Any?, T> {
 public class bindOptionalFXML<T : Any> : ReadOnlyProperty<Any?, T?> {
     private var value: T? = null
 
-    public override fun getValue(thisRef: Any?, desc: KProperty<out Any?>): T? {
+    public override fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         return value
     }
 }
