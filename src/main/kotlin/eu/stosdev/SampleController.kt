@@ -16,7 +16,7 @@ public class SampleController {
     val nonExistingButton: Button? by bindOptionalFXML()
 
     //This button is not present in FXML - cause exception after initialize method
-    val shouldExists: Button by bindFXML()
+    //val shouldNotExists: Button by bindFXML()
 
     fun initialize() {
         println("SampleController")
@@ -26,7 +26,7 @@ public class SampleController {
     }
 
     //Method invoked by pressing top button
-    FXML fun test() {
+    @FXML fun test() {
         println("First button clicked")
     }
 

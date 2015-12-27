@@ -1,12 +1,12 @@
 package eu.stosdev
 
-import javafx.scene.Node
 import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
-public class bindFXML<T : Node> : ReadOnlyProperty<Any?, T> {
+public class bindFXML<T : Any> : ReadOnlyProperty<Any?, T> {
     private var value: T? = null
 
-    public override fun get(thisRef: Any?, desc: PropertyMetadata): T {
+    public override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         val v = value
         if (v == null) {
             throw IllegalStateException("Node was not properly injected")
@@ -15,10 +15,10 @@ public class bindFXML<T : Node> : ReadOnlyProperty<Any?, T> {
     }
 }
 
-public class bindOptionalFXML<T : Node> : ReadOnlyProperty<Any?, T?> {
+public class bindOptionalFXML<T : Any> : ReadOnlyProperty<Any?, T?> {
     private var value: T? = null
 
-    public override fun get(thisRef: Any?, desc: PropertyMetadata): T? {
+    public override fun getValue(thisRef: Any?, property: KProperty<*>): T? {
         return value
     }
 }

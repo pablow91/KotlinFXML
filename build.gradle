@@ -1,7 +1,7 @@
 apply plugin: 'kotlin'
 
 buildscript {
-    ext.kotlin_version = "0.11.91"
+    ext.kotlin_version = "1.0.0-beta-4584"
     repositories {
         mavenCentral()
     }
@@ -18,3 +18,9 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
+
+apply plugin: 'application'
+
+mainClassName = 'eu.stosdev.SampleApp'
+
+
